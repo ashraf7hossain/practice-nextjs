@@ -1,0 +1,14 @@
+.form {
+  background-color: #6233b9;
+  padding: 1rem;
+  width: 20rem;
+  animation: animate-in 1s ease-out;
+}
+
+
+.form label{
+  display: block;
+  margin-bottom: 0.05rem;
+  color: #e6ddf9;
+  font-weight: 600;
+}
