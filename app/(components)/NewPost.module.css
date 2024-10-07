@@ -2,7 +2,7 @@
   background-color: #6233b9;
   padding: 1rem;
   width: 20rem;
-  animation: animate-in 1s ease-out;
+  animation: animate-in 0.6s ease-out;
 }
 
 .form label {
@@ -27,4 +27,17 @@
   border-radius: 4px;
   background-color: #34036c;
   color: #e5d5f7;
+}
+
+
+
+@keyframes animate-in {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
