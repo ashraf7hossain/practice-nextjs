@@ -2,26 +2,58 @@
 
 import { useState } from "react";
 import classes from "./ContactForm.module.css";
+import Notification from "../Notification";
+
+async function sendContactData(contactDetails: any) {
+  const response = await fetch("/api/contact", {
+    method: "POST",
+    body: JSON.stringify(contactDetails),
+    headers: { "Content-Type": "application/json" },
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Something went wrong");
+  }
+}
 
 function ContactForm() {
   const [enterEmail, setEnterEmail] = useState("");
   const [enterMessage, setEnterMessage] = useState("");
   const [enterName, setEnterName] = useState("");
-
+  const [requestStatus, setRequestStatus] = useState("");
   async function sendMessageHandler(event: React.FormEvent) {
     event.preventDefault();
-    await fetch("http://localhost:3001/api/contact", {
-      method: "POST",
-      body: JSON.stringify({
-        name: enterName,
+
+    setRequestStatus("pending");
+
+    try {
+      sendContactData({
         email: enterEmail,
+        name: enterName,
         message: enterMessage,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+      });
+      setRequestStatus("success");
+    } catch (error) {
+      setRequestStatus("error");
+    }
   }
+
+  let notificationData = {
+    status: requestStatus,
+    title:
+      requestStatus === "pending"
+        ? "Sending message..."
+        : requestStatus === "success"
+        ? "Success!"
+        : "Error!",
+    message:
+      requestStatus === "pending"
+        ? "Your message is on its way!"
+        : requestStatus === "success"
+        ? "Message sent successfully!"
+        : "Something went wrong!",
+  };
+
   return (
     <section className={classes.contact}>
       <h1> How can I help you?</h1>
@@ -65,6 +97,13 @@ function ContactForm() {
           <button>Send Message</button>
         </div>
       </form>
+      {notificationData && (
+        <Notification
+          status={notificationData.status}
+          title={notificationData.title}
+          message={notificationData.message}
+        />
+      )}
     </section>
   );
 }
